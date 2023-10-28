@@ -1,37 +1,39 @@
 from django.db import models
 
-# Добавил коментарий
+# Модель Категории (Category)
 class Category(models.Model):
-    name = models.CharField(max_length=100)
-    slug = models.SlugField()
+    name = models.CharField(max_length=100) # Наименование главы
+    slug = models.SlugField()               # Порядок главы в курсе
 
-def get_path_save1(instance,filename):
-    str1 = '{0}\\{1}'.format(instance.author, filename)     # Только функцию нужно доделать чтобы она не пыталась создать
-    return str1                                             # папку с таким же именем
-
+# Модель Курсы (Course)
+# Почему category null=True
 class Course(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField() #max_length
-    overall_rating = models.PositiveIntegerField()
-    author = models.ForeignKey('user.User',
+    name = models.CharField(max_length=100)                                 # Название
+    description = models.TextField()                                        # Описание, max_length
+    overall_rating = models.DecimalField(max_digits=5, decimal_places=2)    # Рейтинг, У нас рейтинг складывается из оценок.
+    author = models.ForeignKey('user.User',                                 # ID_ Пользователь, связь с пользователем. он же автор
                                on_delete=models.DO_NOTHING)
-    category = models.ForeignKey('course.Category',
+    category = models.ForeignKey('course.Category',                         # Категория,
                                  on_delete=models.SET_NULL,
                                  null=True)
-    video = models.FileField(upload_to=get_path_save1, verbose_name='Файл видео урока')
-                                 # Или models.SET_DEFAULT категорию "без категории"
-    #image = models.ImageField() #upload_to
 
+# Модель Глава(Chapter)
 class Chapter(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField() #max_length
-    order = models.PositiveSmallIntegerField()
-    course = models.ForeignKey('course.Course',
+    name = models.CharField(max_length=100)             # Название
+    description = models.TextField()                    # Описание, max_length
+    order = models.PositiveSmallIntegerField()          # Нужна ли глава,
+    course = models.ForeignKey('course.Course',         # ID_ Курса
                                on_delete=models.SET_NULL,
                                null=True)
 
+#  Модель Отзывы на курс (Review)
+# Общий вопрос по отзывам, как ограничить количество оценок на урок, курс дляодного пользователя
 class Review(models.Model):
-    user = models.ForeignKey('user.User',
+    user = models.ForeignKey('user.User',               # ID_ пользователя
                              on_delete=models.CASCADE)
-    course = models.ForeignKey('course.Course',
+    course = models.ForeignKey('course.Course',         # ID_ Курса
                                on_delete=models.CASCADE)
+    text = models.TextField(max_length=2000)                        # Текст, комментарий
+    value = models.PositiveSmallIntegerField()          # Оценка
+    date = models.DateTimeField(auto_now_add=True)      # Дата отзыва
+
