@@ -9,8 +9,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = getenv('SECRET_KEY')
 
 DEBUG = True if getenv('DEBUG') == 'True' else False
+print(DEBUG)
 
-ALLOWED_HOSTS = getenv('ALLOWED_HOSTS', [])
+ALLOWED_HOSTS = getenv('ALLOWED_HOSTS', 'localhost').split()
 
 
 INSTALLED_APPS = [
