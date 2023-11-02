@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Модель Уроки (Lesson)
 class Lesson(models.Model):
     name = models.CharField(max_length=100)                     # Название
@@ -19,9 +20,9 @@ class Lesson(models.Model):
     overall_rating = models.DecimalField(max_digits=5,          # Рейтинг, У нас рейтинг складывается из оценок.
                                          decimal_places=2)
 
+
 # Модель Отзывы уроков (Comment)
 # Почему User с большой буквы
-# Где оценка. лайк?
 class Comment(models.Model):
     text = models.TextField(max_length=2000)                # Текст
     date = models.DateTimeField(auto_now_add=True)          # Дата
@@ -30,6 +31,7 @@ class Comment(models.Model):
     lesson = models.ForeignKey('lesson.Lesson',             # ID_ Урока
                                on_delete=models.CASCADE)
     answer = models.ForeignKey('lesson.Comment',            # ID_ Отзыва2
-                               on_delete=models.CASCADE)
+                               on_delete=models.CASCADE,
+                               null=True)
 
 
