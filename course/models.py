@@ -38,7 +38,7 @@ class Course(models.Model):
         verbose_name_plural = 'Курсы'
 
     def __str__(self):
-        name_author = self.pk + ' ' + self.name + ' ' + self.author
+        name_author = str(self.pk) + ' ' + str(self.name) + ' ' + str(self.author)
         return name_author
 
 
@@ -57,8 +57,8 @@ class Chapter(models.Model):
         verbose_name_plural = 'Главы'
 
     def __str__(self):
-        course_name = self.pk + ' ' + self.course + ' ' + self.name
-        course_name
+        course_name = str(self.pk) + ' ' + str(self.course) + ' ' + str(self.name)
+        return course_name
 
 
 #  Модель Отзывы на курс (Review)

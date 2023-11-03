@@ -12,15 +12,19 @@ class User(models.Model):
     phone_number = models.CharField(unique=True,        # Поле и длина под вопросом
                                     max_length=20,
                                     verbose_name='Номер тел.')
-    photo = models.ImageField(verbose_name='Фото')      # Фото пользоваьтеля upload_to
-    subs = models.ManyToManyField('user.User',
-                                  verbose_name='Подписки')      # Подписки
+    photo = models.ImageField(verbose_name='Фото',      # Фото пользоваьтеля upload_to
+                              blank=True, null=True)
+    subs = models.ManyToManyField('user.User',          # Подписки
+                                  verbose_name='Подписки',
+                                  blank=True,null=True)
     likes = models.ManyToManyField('lesson.Lesson',             # Лайки урокам
                                    related_name='liked_lessons',
-                                   verbose_name='Лайки')
+                                   verbose_name='Лайки',
+                                   blank=True, null=True)
     favorites = models.ManyToManyField('lesson.Lesson',         # Избраное уроки
                                        related_name='favorite_lessons',
-                                       verbose_name='Избранное')
+                                       verbose_name='Избранное',
+                                       blank=True, null=True)
     nikname = models.SlugField(verbose_name='НикНейм')          # Уникальное имя пользователя
 
     class Meta:
@@ -28,7 +32,7 @@ class User(models.Model):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        name_2name = self.pk + ' ' + self.surname + ' ' + self.name
+        name_2name = str(self.pk) + ' ' + str(self.surname) + ' ' + str(self.name)
         return name_2name
 
 
