@@ -16,15 +16,15 @@ class User(models.Model):
                               blank=True, null=True)
     subs = models.ManyToManyField('user.User',          # Подписки
                                   verbose_name='Подписки',
-                                  blank=True,null=True)
+                                  blank=True)
     likes = models.ManyToManyField('lesson.Lesson',             # Лайки урокам
                                    related_name='liked_lessons',
                                    verbose_name='Лайки',
-                                   blank=True, null=True)
+                                   blank=True)
     favorites = models.ManyToManyField('lesson.Lesson',         # Избраное уроки
                                        related_name='favorite_lessons',
                                        verbose_name='Избранное',
-                                       blank=True, null=True)
+                                       blank=True)
     nikname = models.SlugField(verbose_name='НикНейм')          # Уникальное имя пользователя
 
     class Meta:
@@ -32,8 +32,7 @@ class User(models.Model):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        name_2name = str(self.pk) + ' ' + str(self.surname) + ' ' + str(self.name)
-        return name_2name
+        return f'{self.pk} {self.surname} {self.name}'
 
 
 # Модель История (History)
@@ -57,5 +56,4 @@ class History(models.Model):
         verbose_name_plural = 'История просмотров'
 
     def __str__(self):
-        lesson_user_date = self.lesson + ' ' + self.user + ' ' + self.date
-        return lesson_user_date
+        return f'{self.date} ({self.user}) ({self.lesson})'

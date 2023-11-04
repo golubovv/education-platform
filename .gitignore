@@ -51,6 +51,7 @@ docs/_build/
 
 .idea
 .env
+media
 
 venv
 media

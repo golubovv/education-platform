@@ -5,33 +5,34 @@ from django.db import models
 class Lesson(models.Model):
     name = models.CharField(max_length=100,                     # Название
                             verbose_name='Наименование лекции')
-    video = models.FileField(verbose_name='Видео')              # Файл видео, upload_to
+    video = models.FileField(verbose_name='Видео', blank=True)  # Файл видео, upload_to
     description = models.TextField(verbose_name='Описание')     # Описание, max_length
     date_create = models.DateTimeField(auto_now_add=True,
                                        verbose_name='Дата создания')            # Дата создания
-    date_publication = models.DateTimeField(verbose_name='Дата публикации')     # Дата публикации, Реализовать логику заполнения
+    date_publication = models.DateTimeField(verbose_name='Дата публикации',     # Дата публикации, Реализовать логику заполнения
+                                            blank=True)
     status = models.BooleanField(verbose_name='Публикация')     # Статус, публикуется или нет, пока непонятно кто этим статусом управляет
     author = models.ForeignKey('user.User',                     # ID_ Пользователь
                                on_delete=models.DO_NOTHING,
                                verbose_name='Автор')
     chapter = models.ForeignKey('course.Chapter',               # ID_ Глава
                                 on_delete=models.SET_NULL,
-                                null=True,
+                                null=True, blank=True,
                                 verbose_name='Глава')
     category = models.ForeignKey('course.Category',             # Категория
                                  on_delete=models.SET_NULL,
-                                 null=True,
+                                 null=True, blank=True,
                                  verbose_name='Категория')
     overall_rating = models.DecimalField(max_digits=5,          # Рейтинг, У нас рейтинг складывается из оценок.
                                          decimal_places=2,
-                                         verbose_name='Рейтинг')
+                                         verbose_name='Рейтинг', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Лекция'
         verbose_name_plural = 'Лекции'
 
     def __str__(self):
-        name_author = self.name + ' ' + self.author
+        name_author = f'{self.name} ({self.author})'
         return name_author
 
 
@@ -50,7 +51,7 @@ class Comment(models.Model):
                                verbose_name='Лекция')
     answer = models.ForeignKey('lesson.Comment',            # ID_ Отзыва2
                                on_delete=models.CASCADE,
-                               null=True,
+                               null=True, blank=True,
                                verbose_name='Ответ на отзыв')
 
     class Meta:
@@ -58,5 +59,5 @@ class Comment(models.Model):
         verbose_name_plural = 'Отзывы'
 
     def __str__(self):
-        lesson_date_User = self.lesson + ' ' + self.date + ' ' + self.User
+        lesson_date_User = f"{self.lesson} {self.date} {self.User}"
         return lesson_date_User

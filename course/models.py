@@ -21,7 +21,7 @@ class Course(models.Model):
                             verbose_name='Наименование курса')  # Название
     description = models.TextField(verbose_name='Описание')      # описани
     overall_rating = models.DecimalField(max_digits=5,          # Рейтинг
-                                         decimal_places=2,
+                                         decimal_places=2, null=True, blank=True,
                                          verbose_name='Рейтинг')
     author = models.ForeignKey('user.User',                     # ID_ Пользователь
                                on_delete=models.DO_NOTHING,
@@ -31,15 +31,14 @@ class Course(models.Model):
                                  verbose_name='Категория')
     price = models.DecimalField(max_digits=5,                   # Цена
                                 decimal_places=2,
-                                verbose_name='Цена')
+                                verbose_name='Цена', default=0)
 
     class Meta:
         verbose_name = 'Курс'
         verbose_name_plural = 'Курсы'
 
     def __str__(self):
-        name_author = str(self.pk) + ' ' + str(self.name) + ' ' + str(self.author)
-        return name_author
+        return f'{self.pk} {self.name} ({self.author})'
 
 
 # Модель Глава(Chapter)
@@ -47,7 +46,7 @@ class Chapter(models.Model):
     name = models.CharField(max_length=100,
                             verbose_name='Наименование главы')              # Название
     description = models.TextField(verbose_name='Описание')                 # Описание, max_length
-    order = models.PositiveSmallIntegerField(verbose_name='Номер главы')    # Нужна ли глава,
+    order = models.PositiveSmallIntegerField(verbose_name='Номер главы')    # Номер главы
     course = models.ForeignKey('course.Course',                             # ID_ Курса
                                on_delete=models.DO_NOTHING,
                                verbose_name='Курс')
@@ -57,8 +56,7 @@ class Chapter(models.Model):
         verbose_name_plural = 'Главы'
 
     def __str__(self):
-        course_name = str(self.pk) + ' ' + str(self.course) + ' ' + str(self.name)
-        return course_name
+        return f'{self.pk} {self.name} ({self.course})'
 
 
 #  Модель Отзывы на курс (Review)
@@ -71,7 +69,7 @@ class Review(models.Model):
     course = models.ForeignKey('course.Course',                 # ID_ Курса
                                on_delete=models.CASCADE,
                                verbose_name='Курс')
-    text = models.TextField(max_length=2000,
+    text = models.TextField(max_length=2000, null=True, blank=True,
                             verbose_name='Текст отзыва')        # Текст, комментарий
     value = models.PositiveSmallIntegerField(verbose_name='Оценка')     # Оценка
     date = models.DateTimeField(auto_now_add=True,
@@ -83,7 +81,4 @@ class Review(models.Model):
         ordering = ['date']
 
     def __str__(self):
-        course_date_user = self.course + ' ' + self.date + ' ' + self.user
-        return course_date_user
-
-
+        return f'{self.course} {self.date} ({self.user})'
