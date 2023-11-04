@@ -21,7 +21,7 @@ class Course(models.Model):
                             verbose_name='Наименование курса')  # Название
     description = models.TextField(verbose_name='Описание')      # описани
     overall_rating = models.DecimalField(max_digits=5,          # Рейтинг
-                                         decimal_places=2, null=True, blank=True,
+                                         decimal_places=2, default=0,
                                          verbose_name='Рейтинг')
     author = models.ForeignKey('user.User',                     # ID_ Пользователь
                                on_delete=models.DO_NOTHING,

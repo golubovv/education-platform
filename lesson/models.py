@@ -25,15 +25,14 @@ class Lesson(models.Model):
                                  verbose_name='Категория')
     overall_rating = models.DecimalField(max_digits=5,          # Рейтинг, У нас рейтинг складывается из оценок.
                                          decimal_places=2,
-                                         verbose_name='Рейтинг', blank=True, null=True)
+                                         verbose_name='Рейтинг', default=0)
 
     class Meta:
         verbose_name = 'Лекция'
         verbose_name_plural = 'Лекции'
 
     def __str__(self):
-        name_author = f'{self.name} ({self.author})'
-        return name_author
+        return f'{self.name} ({self.author})'
 
 
 # Модель Отзывы уроков (Comment)
@@ -59,5 +58,4 @@ class Comment(models.Model):
         verbose_name_plural = 'Отзывы'
 
     def __str__(self):
-        lesson_date_User = f"{self.lesson} {self.date} {self.User}"
-        return lesson_date_User
+        return f"{self.lesson} {self.date} {self.User}"
