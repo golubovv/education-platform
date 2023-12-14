@@ -60,3 +60,48 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.lesson} {self.date} {self.user}"
+
+
+class TestsPractice(models.Model):
+    name = models.CharField(max_length=150,
+                            verbose_name='Название теста')
+    description = models.TextField(max_length=2000,
+                                   verbose_name='Описание')
+    lesson = models.ForeignKey('lessons.Lesson',
+                               on_delete=models.CASCADE,
+                               verbose_name='Урок')
+    type_test = models.CharField(max_length=150, verbose_name='Тип теста')
+
+    class Meta:
+        verbose_name = 'Практика (тест)'
+        verbose_name_plural = 'Практика (тесты)'
+
+
+class Questions(models.Model):
+    description_ques = models.TextField(max_length=2000,
+                                        verbose_name='Вопрос')
+    test_id = models.ForeignKey('lessons.TestsPractice',
+                                on_delete=models.CASCADE,
+                                verbose_name='Тест')
+    num_question = models.IntegerField(verbose_name='Номер вопроса', default=0)
+    type_question = models.CharField(max_length=150,
+                                     verbose_name='Тип вопроса')
+
+    class Meta:
+        verbose_name = 'Вопросы к тестам'
+        verbose_name_plural = 'Вопрос'
+
+
+class Choices(models.Model):
+    choice_answer = models.TextField(max_length=2000,
+                                     verbose_name='Вариант ответа')
+    is_correct = models.BooleanField(default=False, verbose_name='Верно Да/Нет')
+    Questions = models.ForeignKey('lessons.Questions',
+                                  on_delete=models.CASCADE,
+                                  verbose_name='Вопрос')
+
+    class Meta:
+        verbose_name = 'Варианты к вопросам'
+        verbose_name_plural = 'Вариант ответа'
+
+
