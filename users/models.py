@@ -74,7 +74,7 @@ class Answers(models.Model):
 
 class QuestionsAnswers(models.Model):
     id_answer = models.ForeignKey(
-        'users.TestsPractice',
+        'lessons.TestsPractice',
         on_delete=models.CASCADE,
         verbose_name='Пользователь'
     )
