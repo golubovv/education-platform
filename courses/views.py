@@ -1,9 +1,13 @@
+from typing import Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, CreateView, DetailView
+from django.urls import reverse_lazy
+from django.shortcuts import redirect
+from django.views.generic.edit import FormMixin
+
 from .models import Course, Chapter
 from lessons.models import Lesson
-from .forms import CreateCourse, CreateChapter
-from django.urls import reverse_lazy
+from .forms import CreateCourse, CreateChapter, SubToCourseForm
 
 
 # Главная страница, выводит все курсы в порядке создания.
@@ -27,17 +31,35 @@ class AddCourse(LoginRequiredMixin, CreateView):
 
 
 # Класс-контроллер для обзора курса
-class GetCourse(DetailView):
+class GetCourse(FormMixin, DetailView):
     model = Course
     pk_url_kwarg = 'course_id'
     template_name = 'courses/course.html'
-    context_object_name = 'courses'
+    context_object_name = 'course'
+    form_class = SubToCourseForm
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        current_course = self.get_context_data()['course']
+        self.request.user.courses.add(current_course)
+
+        return redirect(reverse_lazy('course_display', 
+                                     kwargs={'course_id': current_course.pk}))
+    
+
 
 
 # Класс-контроллер для обзора курса
 class EditCourse(DetailView):
     model = Course
-    pk_url_kwarg = 'course_id2'                 #
+    pk_url_kwarg = 'course_id2'
     template_name = 'courses/edit_course.html'
     context_object_name = 'courses'
 

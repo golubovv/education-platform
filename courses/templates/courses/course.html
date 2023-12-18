@@ -4,36 +4,43 @@
 <div class="container">
 
   <div class="row justify-content-start">
-      <div class="col-12"><h3>Название курса:</h3> {{ courses.name }}</div>
+      <div class="col-12"><h3>Название курса:</h3> {{ course.name }}</div>
   </div>
 
   <div class="row justify-content-start">
-      <div class="col-12"><h3>Категория:</h3> {{ courses.category }}</div>
+      <div class="col-12"><h3>Категория:</h3> {{ course.category }}</div>
   </div>
 
   <div class="row justify-content-start">
       <div class="col-12"><h3>Описание: </h3></div>
   </div>
   <div class="row justify-content-start">
-      <div class="col-12"><p>{{ courses.description }}</p></div>
+      <div class="col-12"><p>{{ course.description }}</p></div>
   </div>
 
   <div class="row justify-content-start">
-      <div class="col-12">Автор: {{ courses.author }}</div>
+      <div class="col-12">Автор: {{ course.author }}</div>
   </div>
 
   <div class="row justify-content-start">
-      <div class="col-12">Цена: {{ courses.price }}</div>
-  </div>
-
-  <div class="row justify-content-start">
-      <div class="col-12">Рейтинг: {{ courses.overall_rating }}</div>
+      <div class="col-12">Рейтинг: {{ course.overall_rating }}</div>
   </div>
 
 {% if user.id == courses.author.id %}
-    <a class="btn btn-primary" href="{%url 'edit_course' courses.pk%}">Редактировать</a>
+    <a class="btn btn-primary" href="{%url 'edit_course' course.pk%}">Редактировать</a>
 {% else %}
-    <p>Вы не можете редактировать курс</p>
+    <form method="post">
+    {% csrf_token %}
+    {% if course not in request.user.courses.all %}
+        {% if course.price %}
+            <button type="submit" class="btn btn-primary">{{ course.price }} рублей</a>
+        {% else %}
+            <button type="submit" class="btn btn-primary">Подписаться на курс</a>
+        {% endif %}
+    {% else %}
+                
+    {% endif %}
+    </form>
 {% endif %}
 </div>
 

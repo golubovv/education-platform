@@ -15,6 +15,8 @@ class User(AbstractUser):
     subs = models.ManyToManyField('users.User',          # Подписки
                                   verbose_name='Подписки',
                                   blank=True)
+    courses = models.ManyToManyField('courses.Course',
+                                     verbose_name='Курсы')
     likes = models.ManyToManyField('lessons.Lesson',             # Лайки урокам
                                    related_name='liked_lessons',
                                    verbose_name='Лайки',

@@ -12,8 +12,9 @@ class LessonsList(ListView):
     context_object_name = 'lessons'
 
 
-# Класс-контроллер для создания уроков, LoginRequiredMixin - ограничение доступа к странице
+
 class AddLesson(LoginRequiredMixin, CreateView):
+    ''' Класс-контроллер для создания уроков, LoginRequiredMixin - ограничение доступа к странице '''
     form_class = CreateLesson
     template_name = 'lessons/createlesson.html'
     pk_url_kwarg = 'course_id4'
