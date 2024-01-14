@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Страница редактирования упражнения</h1>
+<h3>Шаблон: lessons\templates\lessons\edit_practice_ext.html</h3>
+<h3>Контроллер  lessons\view.py "EditTestsPractice(View)"</h3>
+<br>
+<div class="container">
+    <div class="row justify-content-start" style="background-color: #149EA6;">
+        <div class="col-lg-4 border"> <h4>Курс: {{ lesson.chapter.course.name }} </h4> </div>
+        <div class="col-lg-4 border"><h4>ID курса: {{ lesson.chapter.course.pk }}</h4></div>
+        <div class="col-lg-4 border"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #149EA6;  padding: 5px 0px;">
+        <div class="col-lg-12"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #84B9BC;">
+        <div class="col-lg-1 border"></div>
+        <div class="col-lg-4 border"><p><strong>Урок: {{ lesson.name }} </strong></p></div>
+        <div class="col-lg-4 border"><p><strong>ID урока: {{ lesson.pk }} </strong></p></div>
+        <div class="col-lg-3 border"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #84B9BC;  padding: 5px 0px;">
+        <div class="col-lg-12"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #9CD6DA;">
+        <div class="col-lg-2 border"></div>
+        <div class="col-lg-4 border"><p><strong>Упражнение: {{ practice.name }} </strong></p></div>
+        <div class="col-lg-4 border"><p><strong>ID упражнения: {{ practice.pk }} </strong></p></div>
+        <div class="col-lg-2 border"><a class="btn btn-info" href="{%url 'edit_practice' practice.pk %}">Изменить</a></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #9CD6DA;">
+        <div class="col-lg-2 border"></div>
+        <div class="col-lg-8 border"><p><strong>Описание: </strong></p><p>{{ practice.description }}</p></div>
+        <div class="col-lg-2 border"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #9CD6DA;  padding: 5px 0px;">
+        <div class="col-lg-12"></div>
+    </div>
+    <br>
+    {% for key,item in questions.items %}
+        {% for item2 in item %}
+        {% if forloop.first%}
+            <div class="row" style="background-color: #E1D667; padding: 8px 0px;">
+                <div class="col-12"></div>
+            </div>
+            <div class="row" style="background-color: #FAEE72; padding: 2px 0px;">
+                <div class="col-1 border"><p class="text-center">{{ item2.num_question }}</p></div>
+                <div class="col-7 border"><p><strong>{{ item2.description_ques }}</strong></p></div>
+                <div class="col-2 border"><p class="text-center">Тип: {% if item2.type_question == "TEST" %} ТЕСТ {% else %} ТЕСТ2 {% endif %} {{ item2.type_question }}</p></div>
+                <div class="col-2 border"><p class="text-center"><a class="btn btn-warning" href="{%url 'edit_quistion' item2.pk %}">Изменить</a></p></div>
+            </div>
+            <div class="row" style="background-color: #FAEE72; padding: 2px 0px;">
+                <div class="col-12"><p class="text-center"></p></div>
+            </div>
+            <div class="row" style="background-color: #FDF6BA;">
+                <div class="col-1 border"><p class="text-center">№</p></div>
+                <div class="col-7 border"><p class="text-center">Вариант(ы) ответа</p></div>
+                <div class="col-2 border"><p class="text-center">Верно да/нет</p></div>
+                <div class="col-2 border"><p class="text-center"></p></div>
+            </div>
+        {% endif %}
+
+        {% if forloop.first is False  %}
+            {% for item3 in item2 %}
+                <div class="row" style="background-color: #FDF6BA;">
+                    <div class="col-1 border"><p class="text-center">{{forloop.counter}}</p></div>
+                    <div class="col-7 border"><p class="text-center">{{item3.choice_answer}}</p></div>
+                    <div class="col-2 border"><p class="text-center">{{item3.is_correct}}</p></div>
+                    <div class="col-2 border"><p class="text-center"><a class="btn btn-warning" href="{%url 'edit_choic' item3.pk %}">Изменить</a></p></div>
+                </div>
+                {% if forloop.last %}
+                <div class="row" style="background-color: #FDF6BA;">
+                    <div class="col-1 border"><p class="text-center">-</p></div>
+                    <div class="col-7 border"><p class="text-center"><a class="btn btn-warning" href="{%url 'create_choices' item3.Questions.pk %}">Добавить вариант ответа</a></p></div>
+                    <div class="col-2 border"><p class="text-center">-</p></div>
+                    <div class="col-2 border"><p class="text-center">-</p></div>
+                </div>
+                {% endif %}
+            {% empty %}
+                <div class="row align-items-center" style="background-color: #FDF6BA;">
+                   <div class="col-1 border"><p class="text-center">-</p></div>
+                   <div class="col-7 border"><p class="text-center"><a class="btn btn-warning" href="{%url 'create_choices' item.0.pk %}">Добавить вариант ответа</a></p></div>
+                    <div class="col-2 border"><p class="text-center">-</p></div>
+                    <div class="col-2 border"><p class="text-center">-</p></div>
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+
+    {% if forloop.last %}
+        <div class="row" style="background-color: #E1D667;">
+            <div class="col-12"></div>
+        </div>
+        <div class="row" style="background-color: #FAEE72;">
+            <div class="col-1 border"><p class="text-center">-</p></div>
+            <div class="col-7 border"><p><strong>-</strong></p></div>
+            <div class="col-2 border"><p class="text-center">-</p></div>
+            <div class="col-2 border"><p class="text-center"><a class="btn btn-warning" href="{%url 'create_quistion' practice.pk %}">Добавить вопрос</a></p></div>
+        </div>
+        <div class="row" style="background-color: #FAEE72; padding: 2px 0px;">
+            <div class="col-12"><p class="text-center"></p></div>
+        </div>
+    {% endif %}
+    {% empty %}
+        <div class="row" style="background-color: #E1D667; padding: 8px 0px;">
+            <div class="col-12"></div>
+        </div>
+        <div class="row" style="background-color: #FAEE72;">
+            <div class="col-1 border"><p class="text-center">-</p></div>
+            <div class="col-7 border"><p><strong>-</strong></p></div>
+            <div class="col-2 border"><p class="text-center">-</p></div>
+            <div class="col-2 border"><p class="text-center"><a class="btn btn-primary" href="{%url 'create_quistion' practice.pk %}">Создать вопрос</a></p></div>
+        </div>
+        <div class="row" style="background-color: #FAEE72; padding: 2px 0px;">
+            <div class="col-12"><p class="text-center"></p></div>
+        </div>
+    {% endfor %}
+    <div class="row justify-content-start">
+
+    </div>
+</div>
+
+{% endblock %}

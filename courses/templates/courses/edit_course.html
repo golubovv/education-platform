@@ -1,84 +1,92 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Страница редактирования курса</h1>
-
+<h1>Страница обзора курса</h1>
+<h3>Шаблон: courses\templates\courses\edit_course.html</h3>
+<h3>Контроллер  courses\view.py "EditCourse(DetailView)"</h3>
+<br>
 <div class="container">
-    <div class="row">
-        <div class="col-12"><h3>Название курса: {{ courses.name }}</h3></div>
+    <div class="row justify-content-start" style="background-color: #149EA6;">
+        <div class="col-lg-4 border"> <h4>Курс: {{ courses.name }} </h4> </div>
+        <div class="col-lg-4 border"><h4>ID курса: {{ courses.pk }}</h4></div>
+        <div class="col-lg-4 border"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #149EA6;  padding: 5px 0px;">
+        <div class="col-lg-12"></div>
     </div>
     {% for key,item in lessons.items %}
-       {% for item2 in item %}
-       {% if forloop.first %}
-    <div class="row" style="background-color: #FAEE72; padding: 2px 0px;">
-        <div class="col-4">
-            <p><strong>Название главы:</strong></p>
-        </div>
-        <div class="col-8">
-            {{ item2.0.name }}
-        </div>
-    </div>
-    <div class="row" style="background-color: #FDF6BA; padding: 2px 0px;">
-        <div class="col-4">
-            <p><strong>Описание главы:</strong></p>
-        </div>
-        <div class="col-8">
-            {{item2.0.description}}
-        </div>
-    </div>
-    <div class="row" style="background-color: #337BA6; padding: 5px 0px;">
-        <div class="col-1 justify-content-start"></div>
-        <div class="col-3">
-            <strong></strong>
-        </div>
-        <div class="col-8">
-            <strong></strong>
-        </div>
-    </div>
+        {% for item2 in item %}
+        {% if forloop.first %}
+            <div class="row" style="background-color: #FAEE72;">
+                <div class="col-2 border"><p><strong>Название главы:</strong></p></div>
+                <div class="col-10 border">{{ item2.0.name }}</div>
+            </div>
+            <div class="row" style="background-color: #FAEE72;">
+                <div class="col-2 border"><p><strong>Описание главы:</strong></p></div>
+                <div class="col-10 border">{{item2.0.description}}</div>
+            </div>
+            <div class="row" style="background-color: #E1D667;">
+                <div class="col-1 justify-content-start"></div>
+                <div class="col-3"><strong></strong></div>
+                <div class="col-8"><strong></strong></div>
+            </div>
+            <div class="row" style="background-color: #FDF6BA;">
+                <div class="col-1 border"><p><strong>№ п/п</strong></p></div>
+                <div class="col-3 border"><p><strong>Название урока</strong></p></div>
+                <div class="col-4 border"><p><strong>Описание урока</strong></p></div>
+                <div class="col-2 border"><p><strong>Упражнение</strong></p></div>
+                <div class="col-2 border"></div>
+            </div>
         {% endif %}
         {% if forloop.first is False  %}
-        {% for item3 in item2%}
-    <div class="row" style="background-color: #94C6E4; padding: 5px 0px;">
-        <div class="col-1 justify-content-start"></div>
-        <div class="col-3 justify-content-start">
-            {{item3.name}}
-        </div>
-        <div class="col-8 justify-content-start">
-            {{item3.description}}
-        </div>
-    </div>
-        {% if forloop.last %}
-    <div class="row justify-content-end" style="background-color: #94C6E4; padding: 5px 0px;">
-        <div class="col-4"></div>
-        <div class="col-8">
-            <a class="btn btn-primary" href="{%url 'create_lesson' courses.pk item3.chapter.pk%}">Добавить урок</a>
-        </div>
-    </div>
+            {% for item3 in item2%}
+                <div class="row" style="background-color: #FDF6BA;">
+                    <div class="col-1 border">{{forloop.counter}}</div>
+                    <div class="col-3 border">{{item3.name}}</div>
+                    <div class="col-4 border">{{item3.description}}</div>
+                    <div class="col-2 border">
+                        {% if item3.is_practice is False  %}
+                            <a class="btn btn-outline-info" href="{%url 'create_practice' item3.pk %}">Добавить</a>
+                        {% else %}
+                            <a class="btn btn-outline-info" href="{%url 'view_practice' item3.pk %}">Изменить</a>
+                        {% endif %}
+                    </div>
+                    <div class="col-2 border"><a class="btn btn-warning" href="{%url 'edit_lesson' item3.pk%}">Изменить</a></div>
+                </div>
+                {% if forloop.last %}
+                    <div class="row justify-content-end border" style="background-color: #FDF6BA;">
+                        <div class="col-1 border"><p><strong>-</strong></p></div>
+                        <div class="col-3 border"><p><strong>-</strong></p></div>
+                        <div class="col-4 border"><p><strong>-</strong></p></div>
+                        <div class="col-2 border"></div>
+                        <div class="col-2 border"><a class="btn btn-warning" href="{%url 'create_lesson' courses.pk item3.chapter.pk%}">Добавить урок</a></div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <div class="row justify-content-end border" style="background-color: #FDF6BA;">
+                    <div class="col-1 border"><p><strong>-</strong></p></div>
+                    <div class="col-3 border"><p><strong>-</strong></p></div>
+                    <div class="col-4 border"><p><strong>-</strong></p></div>
+                    <div class="col-2 border"></div>
+                    <div class="col-2 border"><a class="btn btn-warning" href="{%url 'create_lesson' courses.pk item.0.0.pk%}">Добавить урок</a></div>
+                </div>
+            {% endfor %}
         {% endif %}
         {% empty %}
-    <div class="row justify-content-end" style="background-color: #94C6E4; padding: 5px 0px;">
-        <div class="col-4"></div>
-        <div class="col-8">
-            <a class="btn btn-primary" href="{%url 'create_lesson' courses.pk item.0.0.pk%}">Добавить урок</a>
-        </div>
-    </div>
+            <div class="row justify-content-end border">
+                <div class="col-12 justify-content-start"><a class="btn btn-warning" href="{%url 'create_chapter' courses.pk%}">Добавить главу</a></div>
+            </div>
         {% endfor %}
+        <br>
+        <br>
+        {% if forloop.last %}
+            <div class="row justify-content-end border">
+                <div class="col-12 justify-content-start"><a class="btn btn-warning" href="{%url 'create_chapter' courses.pk%}">Добавить главу</a></div>
+            </div>
         {% endif %}
     {% empty %}
-    <div class="row justify-content-end">
-        <div class="col-12 justify-content-start">
-            <a class="btn btn-primary" href="{%url 'create_chapter' courses.pk%}">Добавить главу</a>
-        </div>
-    </div>
-    {% endfor %}
-    <br>
-    <br>
-    {% if forloop.last %}
-    <div class="row justify-content-end">
-        <div class="col-12 justify-content-start">
-            <a class="btn btn-primary" href="{%url 'create_chapter' courses.pk%}">Добавить главу</a>
-        </div>
-    </div>
-    {% endif %}
+            <div class="row justify-content-end border">
+                <div class="col-12 justify-content-start"><a class="btn btn-warning" href="{%url 'create_chapter' courses.pk%}">Добавить главу</a></div>
+            </div>
 
     {% endfor %}
 </div>
