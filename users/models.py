@@ -6,31 +6,30 @@ from django.contrib.auth import get_user_model
 
 class User(AbstractUser):
     email = models.EmailField(unique=True, blank=False, null=True)
-    phone_number = models.CharField(unique=True,        # Поле под вопросом
+    phone_number = models.CharField(unique=True,  # Поле под вопросом
                                     max_length=20,
                                     verbose_name='Номер тел.',
                                     blank=True, null=True)
-    photo = models.ImageField(verbose_name='Фото',      # upload_to
+    photo = models.ImageField(verbose_name='Фото',  # upload_to
                               blank=True, null=True)
-    subs = models.ManyToManyField('users.User',          # Подписки
+    subs = models.ManyToManyField('users.User',  # Подписки
                                   verbose_name='Подписки',
                                   blank=True)
-    likes = models.ManyToManyField('lessons.Lesson',             # Лайки урокам
+    likes = models.ManyToManyField('lessons.Lesson',  # Лайки урокам
                                    related_name='liked_lessons',
                                    verbose_name='Лайки',
                                    blank=True)
-    favorites = models.ManyToManyField('lessons.Lesson',         # Избраное уроки
+    favorites = models.ManyToManyField('lessons.Lesson',  # Избраное уроки
                                        related_name='favorite_lessons',
                                        verbose_name='Избранное',
                                        blank=True)
-    
+
     def get_absolute_url(self):
         return reverse('profile', kwargs={'username': self.username})
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
 
 
 class History(models.Model):
@@ -51,16 +50,20 @@ class History(models.Model):
         return f'{self.date} ({self.user}) ({self.lesson})'
 
 
+# ********************   Модель прохождения упражнения пользователем  ************************** #
 class Answers(models.Model):
-    user_id = models.ForeignKey(get_user_model(),
-                                on_delete=models.CASCADE,
-                                verbose_name='Пользователь')
-    test_id = models.ForeignKey('lessons.TestsPractice',
-                                on_delete=models.CASCADE,
-                                verbose_name='Тест')
+    ''' В этой модели фиксируются выполнения упражнений и статус выполнения '''
+
+    user = models.ForeignKey(get_user_model(),
+                             on_delete=models.CASCADE,
+                             verbose_name='Пользователь')
+    test = models.ForeignKey('lessons.TestsPractice',
+                             on_delete=models.CASCADE,
+                             verbose_name='Тест')
     date = models.DateTimeField(auto_now_add=True,
                                 verbose_name='Дата начала')
     is_done = models.BooleanField(default=False, verbose_name='Закончен')
+    is_start = models.BooleanField(default=False, verbose_name='Начато прохождение')
     is_check = models.BooleanField(default=False, verbose_name='Проверен')
     result = models.BooleanField(default=False, verbose_name='Зачтено')
     score = models.DecimalField(max_digits=5,
@@ -72,18 +75,24 @@ class Answers(models.Model):
         verbose_name_plural = 'результат теста'
 
 
+# ********************************************************************** #
+
+
+# *****************   Модель Вопрос  ********************* #
 class QuestionsAnswers(models.Model):
+    ''' В этой модели хранятся статусы прохождения отдельных вопросов '''
+
     id_answer = models.ForeignKey(
         'lessons.TestsPractice',
         on_delete=models.CASCADE,
-        verbose_name='Пользователь'
+        verbose_name='Упражнение'
     )
     id_quest = models.ForeignKey(
         'lessons.Questions',
         on_delete=models.CASCADE,
         verbose_name='Вопрос'
     )
-    #is_done = models.BooleanField(default=False, verbose_name='Проверено')
+    is_start = models.BooleanField(default=False, verbose_name='Начато прохождение')
     is_check = models.BooleanField(default=False, verbose_name='Проверено')
     result = models.BooleanField(default=False, verbose_name='Верно')
 
@@ -92,7 +101,14 @@ class QuestionsAnswers(models.Model):
         verbose_name_plural = 'Результат вопроса'
 
 
+# ********************************************************************** #
+
+
+# *****************   Модель вариант ответ пользователя  ********************* #
 class ChoicesAnwers(models.Model):
+    ''' В этой модели хранятся варианты ответов которые выполнил пользователь
+        *возможна эта модель лишняя.... '''
+
     choice_answer = models.CharField(max_length=150,
                                      verbose_name='Ответ пользователя')
     id_quest_answer = models.ForeignKey(
@@ -104,6 +120,6 @@ class ChoicesAnwers(models.Model):
     result = models.BooleanField(default=False, verbose_name='Верно')
 
     class Meta:
-        verbose_name = 'Варианты ответов'
-        verbose_name_plural = 'Вариант ответа'
-
+        verbose_name = 'Ответы пользователей'
+        verbose_name_plural = 'Ответ пользователя'
+# ********************************************************************** #

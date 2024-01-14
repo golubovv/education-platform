@@ -12,7 +12,7 @@ from email.mime.text import MIMEText
 from phonenumbers import is_possible_number, PhoneNumber, SUPPORTED_REGIONS, country_code_for_region
 
 from .mixins import EmailMixin
-
+from .models import Answers, QuestionsAnswers, ChoicesAnwers
 
 
 class PhoneField(forms.Field):
@@ -32,7 +32,6 @@ class PhoneField(forms.Field):
 
 class RegistrationForm(UserCreationForm):
     # phone_number = PhoneField(label='Номер телефона')
-
 
     class Meta:
         model = get_user_model()
@@ -61,9 +60,8 @@ class ResetPasswordForm(PasswordResetForm, EmailMixin):
             ))
         self.send_message(msg, 'Reset password!')
 
-
     class Meta:
-        widgets = {'email': EmailInput(attrs={'class': 'form-control'}),}
+        widgets = {'email': EmailInput(attrs={'class': 'form-control'})}
     
 
 class LinkEmailForm(forms.ModelForm, EmailMixin):
@@ -90,3 +88,43 @@ class LinkEmailForm(forms.ModelForm, EmailMixin):
         msg = MIMEMultipart()
         msg.attach(MIMEText(f'Confirm your email by following the link: https:/{activation_url}', 'plain', 'utf-8'))
         self.send_message(msg, 'Complete registration!')
+
+
+# Форма для выполнения упражнения пользователем
+class ExecutionAnswers(forms.ModelForm):
+    ''' Форма прохождения теста
+        НУЖНА ЛИ ВООБЩЕ ???? '''
+
+    class Meta:
+        model = Answers
+        fields = ()
+
+
+# Форма для выполнения упражнения
+class ExecutionPractice(forms.ModelForm):
+    ''' Форма в которой отображается вопрос с вариантами ответа,
+        но варианты ответа относятся уже к другой форме '''
+
+    class Meta:
+        model = QuestionsAnswers
+        fields = ()
+
+
+# Форма для выполнения вопросов
+class ExecutionQuestions(forms.ModelForm):
+    ''' Форма в которой отображается вопрос с вариантами ответа,
+        но варианты ответа относятся уже к другой форме '''
+
+    class Meta:
+        model = QuestionsAnswers
+        fields = ()
+
+
+# Форма для выполнения вопросов
+class ExecutionAnwers(forms.ModelForm):
+    ''' Форма в которой пользователь заполняет свой вариант ответа '''
+
+    class Meta:
+        model = ChoicesAnwers
+        fields = ('choice_answer',)
+

@@ -47,7 +47,7 @@ class EditCourse(DetailView):
         contecxt['chapter'] = Chapter.objects.filter(course__pk=self.kwargs['course_id2'])
         lessons = {}
         k = 0
-        for i in obj:
+        for i in obj.order_by('order'):
             list_a = []
             namechapter = f'chapter_{k}'
             list_a.append(Chapter.objects.filter(pk=i.pk))

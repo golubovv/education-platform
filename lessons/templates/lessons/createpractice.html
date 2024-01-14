@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Страница создания упражнений (тестов)</h1>
+<h3>Шаблон      lessons\templates\lessons\createpractice.html</h3>
+<h3>Контроллер  lessons\view.py "AddTestsPractice(CreateView)"</h3>
+<div class="container">
+    <div class="row justify-content-start" style="background-color: #149EA6;">
+        <div class="col-lg-4 border"> <h4>Курс: {{ lesson.0.chapter.course.name }} </h4> </div>
+        <div class="col-lg-4 border"><h4>ID курса: {{ lesson.0.chapter.course.pk }}</h4></div>
+        <div class="col-lg-4 border"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #149EA6;  padding: 5px 0px;">
+        <div class="col-lg-12"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #84B9BC;">
+        <div class="col-lg-1 border"></div>
+        <div class="col-lg-4 border"><p><strong>Урок: {{ lesson.0.name }} </strong></p></div>
+        <div class="col-lg-4 border"><p><strong>ID урока: {{ lesson.0.pk }} </strong></p></div>
+        <div class="col-lg-3 border"></div>
+    </div>
+    <div class="row justify-content-start" style="background-color: #84B9BC;  padding: 5px 0px;">
+        <div class="col-lg-12"></div>
+    </div>
+    <div class="row row-cols-1 justify-content-start">
+        <div class="col-4">
+        <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>{{ field.label }}:<br> {{ field }}</p>
+            {{ field.errors }}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block">Создать Упражнение</button>
+        </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
